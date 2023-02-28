@@ -4,6 +4,8 @@ from typing import Union
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import dotenv
+import os
 
 app = FastAPI()
 
@@ -17,8 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-openai.organization = "org-GFdGk26ukVyy6uQEunGNarU2"
-openai.api_key = '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'
+dotenv.load_dotenv()
+
+openai.organization = os.getenv('organization')
+openai.api_key = os.getenv('api_key')
 
 # print(openai.Model.list())
 
