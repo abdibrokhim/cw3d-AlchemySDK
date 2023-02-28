@@ -2,6 +2,7 @@
 	"name": "alNFT",
 	"version": "0.1.0",
 	"private": true,
+	"proxy": "http://localhost:2000",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
@@ -14,11 +15,13 @@
 		"@emotion/styled": "^11.10.6",
 		"@mui/material": "^5.11.10",
 		"@rainbow-me/rainbowkit": "^0.8.1",
-		"alchemy-sdk": "^2.3.0",
+		"alchemy-sdk": "^2.4.3",
 		"ethers": "^5.7.2",
+		"express": "^4.18.2",
 		"next": "13.1.2",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
+		"react-router-dom": "^6.8.2",
 		"swr": "^2.0.4",
 		"wagmi": "^0.11.7"
 	},

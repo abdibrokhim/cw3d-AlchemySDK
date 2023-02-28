@@ -4,10 +4,11 @@ import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import Skeleton from '@mui/material/Skeleton';
 
-import aPrettyGirlImg from '../aprettygirl.png';
+import aPrettyGirlImg from '../public/aprettygirl.png';
+
 
 const GeneratedImage = ({ imageURL, altText, isSubmitted }) => {
-
+  
   const [imgURL, setImgURL] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
@@ -104,18 +105,18 @@ const GeneratedImage = ({ imageURL, altText, isSubmitted }) => {
   const defaultImagePrompt = () => {
     return (
       <div
-      className=''
-      style={{
-          fontSize: '16px',
-          fontWeight: 'bold',
-          width: '100%',
-          padding: '10px 10px 10px 20px',
-          marginTop: '20px',
-          borderRadius: '5px',
-          backgroundColor: colors.button_bg_primary,
-          color: colors.const_dark_text,
-      }}
-    >
+        className=''
+        style={{
+            fontSize: '16px',
+            fontWeight: 'bold',
+            width: '100%',
+            padding: '10px 10px 10px 20px',
+            marginTop: '20px',
+            borderRadius: '5px',
+            backgroundColor: colors.button_bg_primary,
+            color: colors.const_dark_text,
+        }}
+      >
         {altText ? altText : 'a pretty girl'}
     </div>
     );
@@ -132,7 +133,7 @@ const GeneratedImage = ({ imageURL, altText, isSubmitted }) => {
               paddingRight: '20px',
               paddingLeft: '20px',
               paddingBottom: '30px',
-              borderRadius: '10px',
+              borderRadius: '5px',
             }}>
             {loading ? ((loading && imgURL) ? "" : progressLine()) : ""}
             {loading ? ((loading && imgURL) ? generatedImage() : SkeletonImg()) : defaultImage()}

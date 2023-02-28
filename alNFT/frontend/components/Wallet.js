@@ -1,10 +1,13 @@
 import React from 'react';
+import { useRouter } from 'next/router'
 import Icons from '.././Icons';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 
 const Wallet = () => {
+
+    const router = useRouter()
 
     const generateNFT = async () => {
     };
@@ -28,7 +31,7 @@ const Wallet = () => {
             <ColorButton 
                 variant="contained" 
                 type="submit"
-                onClick={() => generateNFT()}
+                onClick={() => router.push('/profile')}
                 >
                     {Icons.wallet}
             </ColorButton>
