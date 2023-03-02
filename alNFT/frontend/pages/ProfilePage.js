@@ -1,3 +1,4 @@
+require('dotenv').config();
 import React from "react";
 import Container from '@mui/material/Container';
 import ImageList from '@mui/material/ImageList';
@@ -12,7 +13,7 @@ import { Network, Alchemy } from "alchemy-sdk";
 const ProfilePage = () => {
   const settings = {
     apiKey: process.env.ALCHEMY_API_KEY,
-    network: Network.ETH_MAINNET,
+    network: Network.ETH_GOERLI,
   };
 
   const alchemy = new Alchemy(settings);
@@ -21,7 +22,7 @@ const ProfilePage = () => {
 
   const GetNFTs = async () => {
 
-    const nftsForOwner = await alchemy.nft.getNftsForOwner("0x5a019874f4fae314b0eaa4606be746366e661306");
+    const nftsForOwner = await alchemy.nft.getNftsForOwner("0x");
     console.log("number of NFTs found:", nftsForOwner.totalCount);
     console.log("...");
 
