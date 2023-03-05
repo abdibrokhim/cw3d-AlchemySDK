@@ -16,6 +16,7 @@ import {
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import MainLayout from "../layout/mainLayout";
+import useSWR from 'swr'
 
 const { chains, provider } = configureChains(
 	[
@@ -32,7 +33,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-	appName: "My Alchemy DApp",
+	appName: "MyNFT",
 	chains,
 });
 

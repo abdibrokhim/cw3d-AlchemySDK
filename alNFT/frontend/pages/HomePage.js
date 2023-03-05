@@ -3,12 +3,15 @@ import GenerationPrompt from '../components/GenerationPrompt';
 import GeneratedImage from '../components/GeneratedImage';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
+import Minter from '../components/Minter';
 
-function HomePage() {
+const HomePage = () => {
 
     const [imageURL, setImageURL] = React.useState('');
     const [status, setStatus] = React.useState(false);
     const [altText, setAltText] = React.useState("");
+    const [privateKey, setPrivateKey] = React.useState("");
+    const [fileName, setFileName] = React.useState("");
 
     return (
         <>
@@ -19,6 +22,7 @@ function HomePage() {
                             onGenerateNFTClick={(image_URL) => setImageURL(image_URL)} 
                             onSubmitClick={(bool) => setStatus(bool)}
                             setAltText={(alt_text) => setAltText(alt_text)}
+                            imgPath={(file_name) => setFileName(file_name)}
                         />
                     </Grid>
                     <Grid md={6} xs={12}>
@@ -29,6 +33,11 @@ function HomePage() {
                         />
                     </Grid>
                 </Grid>
+                <Minter 
+                    name={altText}
+                    key={privateKey}
+                    path={fileName}
+                />
             </Container>
         </>
     );

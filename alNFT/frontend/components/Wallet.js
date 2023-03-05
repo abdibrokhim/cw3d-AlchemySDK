@@ -9,9 +9,6 @@ const Wallet = () => {
 
     const router = useRouter()
 
-    const generateNFT = async () => {
-    };
-
     const ColorButton = styled(Button)(({ theme }) => ({
         color: theme.palette.getContrastText(teal[600]),
         backgroundColor: teal[600],

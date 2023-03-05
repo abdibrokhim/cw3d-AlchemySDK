@@ -3,6 +3,7 @@ import colors from '../colors';
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import Skeleton from '@mui/material/Skeleton';
+import Minter from '../components/Minter';
 
 import aPrettyGirlImg from '../public/aprettygirl.png';
 
@@ -56,7 +57,7 @@ const GeneratedImage = ({ imageURL, altText, isSubmitted }) => {
     return (
       <img 
         src={imgURL.length > 0 ? imgURL : aPrettyGirlImg}
-        alt={altText ? altText : ''}
+        alt={altText ? altText : 'a pretty girl'}
         style={{
             marginTop: '20px',
             width: '100%',
@@ -138,6 +139,7 @@ const GeneratedImage = ({ imageURL, altText, isSubmitted }) => {
             {loading ? ((loading && imgURL) ? "" : progressLine()) : ""}
             {loading ? ((loading && imgURL) ? generatedImage() : SkeletonImg()) : defaultImage()}
             {loading ? ((loading && imgURL) ? generatedImagePrompt() : SkeletonPrompt()) : defaultImagePrompt()}
+            {/* <Minter /> */}
         </div>
       </div>
   );

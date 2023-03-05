@@ -5,29 +5,70 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 
-const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText }) => {
+const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText, imgPath }) => {
+    const fetch = require('node-fetch');
+    const fs = require('fs');
+
+    const Buffer = require('buffer').Buffer;
+
+    const { Configuration, OpenAIApi } = require("openai");
+        
+    const configuration = new Configuration({
+        organization: "",
+        apiKey: ""
+    });
+
+    const openai = new OpenAIApi(configuration);
 
     const [description, setDescription] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [imageURL, setImageURL] = React.useState('https://lh4.googleusercontent.com/DpLHDSX6xnLwFYR61IqSudYU7Gu-yHfySpx5PqX7Tt5p-iCGnheKOmpudJ2i5YnE2ScBhivk8MSBo3V9NWD2pb4cxSCHk5rnKaxXn-HweJlarS8YqRA3izoMeo4vOyFBVrzIQrf5eUe6Hpb-LUAuldc');
+    const [isDownloaded, setIsDownloaded] = React.useState(false);
+    const [fileName, setFileName] = React.useState('');
+
+    React.useEffect(() => {
+        onGenerateNFTClick(imageURL);
+        setAltText(description);
+        imgPath(fileName);
+    }, [isDownloaded===true]);
+
+    const downloadImage = () => {
+        fetch(`http://localhost:3005/api/download-image?url=${imageURL}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const file_path = data.message;
+                    console.log(file_path);
+                    
+                    setFileName(file_path);
+
+                    setIsDownloaded(true);
+                } else {
+                    const error = data.error;
+                    console.error(error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
     const generateNFT = async () => {
-        console.log('Generating NFT');
-      
-        axios.defaults.headers.get['Content-Type'] ='application/json; charset=utf-8';
-        axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
-        axios.get(`/api/dallee/${description}`)
-            .then(response => {
-                console.log(response.data);
+        console.log('Generating NFT...');
 
-                console.log('Image URL: ', response.data)
+        // const response = await openai.createImage({
+        //     prompt: description,
+        //     n: 1,
+        //     size: "256x256",
+        // });
 
-                onGenerateNFTClick(response.data);
-                setAltText(description);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        // setImageURL(response.data.data[0].url);
+        setImageURL('https://lh4.googleusercontent.com/DpLHDSX6xnLwFYR61IqSudYU7Gu-yHfySpx5PqX7Tt5p-iCGnheKOmpudJ2i5YnE2ScBhivk8MSBo3V9NWD2pb4cxSCHk5rnKaxXn-HweJlarS8YqRA3izoMeo4vOyFBVrzIQrf5eUe6Hpb-LUAuldc');
         
+        console.log('Image URL: ', imageURL);
+        
+        downloadImage();
+
         setLoading(false);
     };
 
@@ -119,24 +160,6 @@ const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText }) => 
                         >
                             Generate
                     </ColorButton>
-                    {/* <button 
-                        disabled={loading || description.length === 0}
-                        type="submit"
-                        className='generate bg-[#BA0B32] hover:bg-[#ba0b31d2]'
-                        style={{
-                            color: colors.button_bg_primary,
-                            padding: '10px 20px',
-                            fontSize: '18px',
-                            marginTop: '10px',
-                            width: '50%',
-                            border: 'none',
-                            borderRadius: '10px',
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => generateNFT()}
-                        >
-                            Generate
-                    </button> */}
                 </form>
             </div>
         </div>

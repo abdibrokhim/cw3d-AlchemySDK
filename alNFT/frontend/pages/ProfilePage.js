@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 import React from "react";
 import Container from '@mui/material/Container';
 import ImageList from '@mui/material/ImageList';
@@ -12,7 +12,7 @@ import { Network, Alchemy } from "alchemy-sdk";
 
 const ProfilePage = () => {
   const settings = {
-    apiKey: process.env.ALCHEMY_API_KEY,
+    apiKey: "",
     network: Network.ETH_GOERLI,
   };
 
@@ -22,7 +22,9 @@ const ProfilePage = () => {
 
   const GetNFTs = async () => {
 
-    const nftsForOwner = await alchemy.nft.getNftsForOwner("0x");
+    const address = "";
+
+    const nftsForOwner = await alchemy.nft.getNftsForOwner(address);
     console.log("number of NFTs found:", nftsForOwner.totalCount);
     console.log("...");
 
@@ -55,7 +57,7 @@ const ProfilePage = () => {
       <Container>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {nfts.map((nft, key) => (
-            <Grid item sm={3} xs={12}>
+            <Grid item sm={3} xs={12} key={key}>
                 <NftWrapper>
                   <img 
                     src={`${nft.contract.openSea.imageUrl}?w=164&h=164&fit=crop&auto=format`}

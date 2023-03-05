@@ -2,7 +2,6 @@
 	"name": "alNFT",
 	"version": "0.1.0",
 	"private": true,
-	"proxy": "http://localhost:2000",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
@@ -13,13 +12,16 @@
 	"dependencies": {
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
-		"@mui/material": "^5.11.10",
+		"@mui/icons-material": "^5.11.11",
+		"@mui/material": "^5.11.11",
+		"@next/swc-darwin-arm64": "^13.2.3",
 		"@rainbow-me/rainbowkit": "^0.8.1",
 		"alchemy-sdk": "^2.4.3",
-		"dotenv": "^16.0.3",
 		"ethers": "^5.7.2",
 		"express": "^4.18.2",
+		"fs": "^0.0.1-security",
 		"next": "13.1.2",
+		"openai": "^3.2.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-router-dom": "^6.8.2",
@@ -27,7 +29,13 @@
 		"wagmi": "^0.11.7"
 	},
 	"devDependencies": {
+		"@types/node-fetch": "^2.6.2",
 		"eslint": "8.20.0",
 		"eslint-config-next": "12.2.3"
+	},
+	"browser": {
+		"fs": false,
+		"path": false,
+		"os": false
 	}
 }
