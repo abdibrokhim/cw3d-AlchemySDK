@@ -1,75 +1,145 @@
 import React from 'react';
 import colors from '../colors';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText, imgPath }) => {
+import Minter from '../components/Minter';
+
+const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText }) => {
     const fetch = require('node-fetch');
-    const fs = require('fs');
-
-    const Buffer = require('buffer').Buffer;
 
     const { Configuration, OpenAIApi } = require("openai");
         
     const configuration = new Configuration({
-        organization: "",
-        apiKey: ""
+        organization: process.env.OPENAI_ORG,
+        apiKey: process.env.OPENAI_API_KEY,
     });
 
     const openai = new OpenAIApi(configuration);
 
     const [description, setDescription] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    const [imageURL, setImageURL] = React.useState('https://lh4.googleusercontent.com/DpLHDSX6xnLwFYR61IqSudYU7Gu-yHfySpx5PqX7Tt5p-iCGnheKOmpudJ2i5YnE2ScBhivk8MSBo3V9NWD2pb4cxSCHk5rnKaxXn-HweJlarS8YqRA3izoMeo4vOyFBVrzIQrf5eUe6Hpb-LUAuldc');
+    const [imageURL, setImageURL] = React.useState('');
     const [isDownloaded, setIsDownloaded] = React.useState(false);
     const [fileName, setFileName] = React.useState('');
+    const [alertText, setAlertText] = React.useState([]);
+    
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     React.useEffect(() => {
-        onGenerateNFTClick(imageURL);
-        setAltText(description);
-        imgPath(fileName);
-    }, [isDownloaded===true]);
+        if (isDownloaded === false) {
+            onGenerateNFTClick(imageURL);
+            setAltText(description);
+        }
+    }, []);
 
-    const downloadImage = () => {
-        fetch(`http://localhost:3005/api/download-image?url=${imageURL}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const file_path = data.message;
-                    console.log(file_path);
-                    
-                    setFileName(file_path);
+    const Alert = React.forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
 
-                    setIsDownloaded(true);
-                } else {
-                    const error = data.error;
-                    console.error(error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
+    const Stackbar = () => {
+        return (
+            <Stack spacing={2} sx={{ width: '100%' }}>
+            <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={alertText.status} sx={{ width: '100%', color: 'white'}}>
+                    {alertText.message}
+                </Alert>
+            </Snackbar>
+            </Stack>
+        );
+    };
 
-    const generateNFT = async () => {
+    const downloadImage = async ({ imageURL }) => {
+        try {
+            if (imageURL.length > 0) {
+                fetch(`http://localhost:3005/api/download-image?url=${imageURL}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const file_path = data.message;
+                            console.log(file_path);
+                            
+                            setFileName(file_path);
+
+                            setIsDownloaded(true);
+                        } else {
+                            const error = data.error;
+                            console.error(error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        setOpen(true);
+                        setAlertText({status: 'error', message: 'Error: Failed to catch image'});
+                    });
+            } else {
+                console.error('Error: Image URL is empty');
+                setOpen(true);
+                setAlertText({status: 'error', message: 'Error: Image URL is empty'});
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setOpen(true);
+            setAlertText({status: 'error', message: 'Error: Failed to download image'});
+        }
+    };
+
+    const generateNFT = () => {
         console.log('Generating NFT...');
+        setOpen(true);
+        setAlertText({status: 'info', message: 'Info: Generating NFT...'});
 
-        // const response = await openai.createImage({
-        //     prompt: description,
-        //     n: 1,
-        //     size: "256x256",
-        // });
+        let response = null;
 
-        // setImageURL(response.data.data[0].url);
-        setImageURL('https://lh4.googleusercontent.com/DpLHDSX6xnLwFYR61IqSudYU7Gu-yHfySpx5PqX7Tt5p-iCGnheKOmpudJ2i5YnE2ScBhivk8MSBo3V9NWD2pb4cxSCHk5rnKaxXn-HweJlarS8YqRA3izoMeo4vOyFBVrzIQrf5eUe6Hpb-LUAuldc');
-        
-        console.log('Image URL: ', imageURL);
-        
-        downloadImage();
-
+        try {
+            response = openai.createImage({
+                prompt: description,
+                n: 1,
+                size: "256x256",
+            });
+            console.log(response);
+            
+            if (response) {
+                const image_url = resData.data.data[0].url;
+    
+                if (image_url === '') {
+                    setOpen(true);
+                    setAlertText({status: 'error', message: 'Error: Failed to generate image'});
+                    return;
+                } else {
+                    setImageURL(image_url);
+                    setOpen(true);
+                    setAlertText({status: 'success', message: 'Success: Image generated'});
+                    downloadImage(image_url);
+                }
+                
+                console.log('Image URL: ', imageURL);
+                
+            } else {
+                setOpen(true);
+                setAlertText({status: 'error', message: 'Error: Failed to get response'});
+                return;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setOpen(true);
+            setAlertText({status: 'error', message: 'Error: Failed to generate image'});
+        }
         setLoading(false);
+
+        onSubmitClick(false);
     };
 
     function handleSubmit(e) {
@@ -103,6 +173,7 @@ const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText, imgPa
     return (
         <div 
             className=''>
+            {open ? Stackbar() : <></>}
             <div 
                 className=''
                 style={{
@@ -150,16 +221,24 @@ const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText, imgPa
                         placeholder='Enter your text here'
                         onChange={(e) => setDescription(e.target.value)}
                     >
-
                     </textarea>
-                    <ColorButton 
-                        disabled={loading || description.length === 0}
-                        variant="contained" 
-                        type="submit"
-                        onClick={() => generateNFT()}
-                        >
-                            Generate
-                    </ColorButton>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            gap: '20px',
+                        }}
+                    >
+                        <ColorButton 
+                            disabled={loading || description.length === 0}
+                            variant="contained" 
+                            type="submit"
+                            onClick={() => generateNFT()}
+                            >
+                                Generate
+                        </ColorButton>
+                        <Minter name={description} path={fileName}/>
+                    </div>
                 </form>
             </div>
         </div>

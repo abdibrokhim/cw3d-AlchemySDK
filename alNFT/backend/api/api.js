@@ -1,4 +1,6 @@
+require('dotenv').config();
 const express = require('express');
+const rateLimit = require('express-rate-limit')
 const app = express();
 const ethers = require('ethers');
 const pinataSDK = require('@pinata/sdk');
@@ -11,6 +13,11 @@ app.use((req, res, next) => {
     next();
 });  
 
+// Define the limit
+app.use('/api/download-image', rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+}));
 
 // Define your API endpoint
 app.post('/api/download-image', async (req, res) => {
@@ -37,26 +44,38 @@ app.post('/api/download-image', async (req, res) => {
         res.status(500).json({ success: false, error: error });
     }
 });
+// app.use('/api/download-image', rateLimit())
 
 
 // Define Alchemy API key and provider
-const ALCHEMY_API_KEY = ""; // Your Alchemy API key
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY; // Your Alchemy API key
 const provider = new ethers.providers.AlchemyProvider('goerli', ALCHEMY_API_KEY);
+const privateKey = process.env.PRIVATE_KEY; // Your private key
 
 // Get contract ABI file
 const contract = require("../artifacts/contracts/Lychee.sol/Lychee.json");
 
 // Define the contract address
-const contractAddress = ""; // Your contract address
+const contractAddress = process.env.CONTRACT_ADDRESS; // Your contract address
 
 // Create a contract instance
 const abi = contract.abi;
 const myNftContract = new ethers.Contract(contractAddress, abi);
 
+// Define the limit
+app.use('/api/mint-nft', rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+}));
+
 // Define the API endpoint to call the mintNFT function
 app.post('/api/mint-nft', async (req, res) => {
+    console.log('send request');
     try {
-        const { privateKey, ipfsHash } = req.query;
+        // Get the user's account address from the connected wallet
+        // TODO: get the user's private key from the connected wallet
+
+        const ipfsHash = req.query.ipfsHash;
         const signer = new ethers.Wallet(privateKey, provider);
         const tokenUri = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
 
@@ -75,9 +94,15 @@ app.post('/api/mint-nft', async (req, res) => {
 });
 
 
-const pinataJWTKey = "";
+const pinataJWTKey = process.env.PINATA_JWT;
 
 const pinata = new pinataSDK({ pinataJWTKey: pinataJWTKey });
+
+// Define the limit
+app.use('/api/pinJSONToIPFS', rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+}));
 
 // Pin a JSON to IPFS
 app.post('/api/pinJSONToIPFS', async (req, res) => {
@@ -118,6 +143,13 @@ app.post('/api/pinJSONToIPFS', async (req, res) => {
     }
 });
 
+
+// Define the limit
+app.use('/api/pinFileToIPFS', rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+}));
+
 // Pin a file to IPFS
 app.post('/api/pinFileToIPFS', async (req, res) => {
     const description = req.query.description;
@@ -153,3 +185,4 @@ app.post('/api/pinFileToIPFS', async (req, res) => {
 app.listen(3005, () => {
     console.log('Server started on port 3005');
 });
+

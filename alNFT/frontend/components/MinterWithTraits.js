@@ -1,3 +1,7 @@
+// v2.0.0
+// This is a component that will be used to mint NFTs with traits
+// In the future, this will be used to mint NFTs with traits
+
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
