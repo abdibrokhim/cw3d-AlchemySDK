@@ -1,6 +1,8 @@
 I made this project for the [Alchemy The SDK Developer Challenge](https://www.alchemy.com/sdk-developer-challenge). It is a simple NFT marketplace that allows users to generate NFT using Dall-E and mint NFTs to sell them on the marketplace. It is built on the Alchemy SDK and uses the Goerli network.
 
+### Preview
 
+![plot](alNFT/frontend/public/preview.jpeg)
 
 # Installation
 
