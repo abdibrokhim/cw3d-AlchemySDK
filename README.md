@@ -21,7 +21,7 @@ cd alNFT
 ## FRONTEND
 
 ```
-CD frontend
+cd frontend
 ```
 
 ## Install dependencies
