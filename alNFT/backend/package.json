@@ -16,7 +16,9 @@
 		"dotenv": "^16.0.3",
 		"express-rate-limit": "^6.7.0",
 		"fs": "^0.0.1-security",
-		"openai": "^3.2.1"
+		"openai": "^3.2.1",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^4.6.2"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
@@ -36,6 +38,7 @@
 		"hardhat": "^2.10.1",
 		"hardhat-gas-reporter": "^1.0.9",
 		"node-fetch": "^3.3.0",
+		"nodemon": "^2.0.21",
 		"solidity-coverage": "^0.7.22",
 		"ts-node": "^10.9.1",
 		"typechain": "^8.1.1",

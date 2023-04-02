@@ -1,3 +1,4 @@
+// require('dotenv').config();
 import React from 'react';
 import colors from '../colors';
 import Button from '@mui/material/Button';
@@ -18,6 +19,8 @@ const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText }) => 
         organization: process.env.OPENAI_ORG,
         apiKey: process.env.OPENAI_API_KEY,
     });
+    let apiKey = process.env.OPENAI_API_KEY;
+    console.log('apiKey', apiKey);
 
     const openai = new OpenAIApi(configuration);
 
@@ -245,4 +248,4 @@ const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText }) => 
     );
 };
 
-export default GenerationPrompt
+export default GenerationPrompt;

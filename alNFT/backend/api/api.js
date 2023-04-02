@@ -44,7 +44,6 @@ app.post('/api/download-image', async (req, res) => {
         res.status(500).json({ success: false, error: error });
     }
 });
-// app.use('/api/download-image', rateLimit())
 
 
 // Define Alchemy API key and provider
