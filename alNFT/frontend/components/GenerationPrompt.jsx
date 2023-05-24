@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-import Minter from '../components/Minter';
+import Minter from './Minter';
 
 const GenerationPrompt = ({ onGenerateNFTClick, onSubmitClick, setAltText }) => {
     const fetch = require('node-fetch');

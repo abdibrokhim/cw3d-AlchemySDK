@@ -2,7 +2,7 @@
 import React from "react";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import colors from '.././colors';
+import colors from '../colors';
 
 import { Network, Alchemy } from "alchemy-sdk";
 
